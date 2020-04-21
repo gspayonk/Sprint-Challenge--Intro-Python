@@ -1,10 +1,18 @@
 # Create a class to hold a city location. Call the class "City". It should have
 # fields for name, lat and lon (representing latitude and longitude).
+class City:
+  def __init__(self, name, lat, lon):
+        self.name = name
+        self.lat = lat
+        self.lon = lon
 
+  def __repr__(self):
+        return f'City: {self.name} is found on latitude: {self.lat} and longitude: {self.lon}.'
 
 # We have a collection of US cities with population over 750,000 stored in the
 # file "cities.csv". (CSV stands for "comma-separated values".)
-#
+import csv
+
 # In the body of the `cityreader` function, use Python's built-in "csv" module 
 # to read this file so that each record is imported into a City instance. Then
 # return the list with all the City instances from the function.
@@ -20,7 +28,11 @@ def cityreader(cities=[]):
   # TODO Implement the functionality to read from the 'cities.csv' file
   # For each city record, create a new City instance and add it to the 
   # `cities` list
-    
+  with open('cities.csv') as file:
+    read = csv.reader(file)
+    next(read)
+    for data in read:
+          cities.append(City(data[0], float(data[3]), float(data[4])))
     return cities
 
 cityreader(cities)
@@ -63,6 +75,18 @@ for c in cities:
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # within will hold the cities that fall within the specified region
   within = []
+
+  # min finds the smallest item in the iterable list, max does the opposite, max and min normalizes the input data
+  # to accept any inputs (Be aware that the user could specify either a lower-left/upper-right pair of
+  # coordinates, or an upper-left/lower-right pair of coordinates).
+  lat = [min(lat1, lat2), max(lat1, lat2)]
+  lon = [min(lon1, lon2), max(lon1, lon2)]
+
+  # This function should output all the cities that fall within the coordinate square.
+  # It's basically constricting values from both sides if the latitude that has been given is greater/lesser than or equal it goes to the list by using max and mins, same goes for the longitude this narrows down the values to one.
+  for city in cities:
+    if city.lat >= lat[0] and city.lat <= lat[1] and city.lon >= lon[0] and city.lon <= lon[1]:
+      within.append(city)
 
   # TODO Ensure that the lat and lon valuse are all floats
   # Go through each city and check to see if it falls within 
